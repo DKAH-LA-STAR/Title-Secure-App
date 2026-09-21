@@ -3,6 +3,7 @@ class UserModel {
   final String name;
   final String email;
   final String? role;
+  final String? phoneNumber;
   final DateTime? createdAt;
 
   const UserModel({
@@ -10,17 +11,29 @@ class UserModel {
     required this.name,
     required this.email,
     this.role,
+    this.phoneNumber,
     this.createdAt,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final rawId = json['id'];
+    int parsedId = 0;
+    if (rawId is int) {
+      parsedId = rawId;
+    } else if (rawId is num) {
+      parsedId = rawId.toInt();
+    } else if (rawId != null) {
+      parsedId = int.tryParse(rawId.toString()) ?? 0;
+    }
+
     return UserModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      role: json['role'] as String?,
-      createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at'] as String) 
+      id: parsedId,
+      name: json['name']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      role: json['role']?.toString(),
+      phoneNumber: (json['phone_number'] ?? json['phone'])?.toString(),
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
     );
   }
@@ -31,6 +44,7 @@ class UserModel {
       'name': name,
       'email': email,
       if (role != null) 'role': role,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
       if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
     };
   }
@@ -40,6 +54,7 @@ class UserModel {
     String? name,
     String? email,
     String? role,
+    String? phoneNumber,
     DateTime? createdAt,
   }) {
     return UserModel(
@@ -47,6 +62,7 @@ class UserModel {
       name: name ?? this.name,
       email: email ?? this.email,
       role: role ?? this.role,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       createdAt: createdAt ?? this.createdAt,
     );
   }

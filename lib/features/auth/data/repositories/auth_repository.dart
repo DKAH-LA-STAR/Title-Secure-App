@@ -9,6 +9,8 @@ abstract class AuthRepository {
     required String email,
     required String password,
     required String passwordConfirmation,
+    String? role,
+    String? phoneNumber,
   });
   Future<UserModel?> getCachedOrRemoteUser();
   Future<void> logout();
@@ -33,11 +35,28 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
-    // Save token to secure storage
-    final token = data['token'] as String;
-    await storageService.saveToken(token);
+    // Save token to secure storage defensively
+    final token = (data['token'] ??
+            data['access_token'] ??
+            (data['data'] is Map
+                ? (data['data']['token'] ?? data['data']['access_token'])
+                : null))
+        ?.toString();
+    if (token != null && token.isNotEmpty) {
+      await storageService.saveToken(token);
+    }
 
-    return UserModel.fromJson(data['user'] as Map<String, dynamic>);
+    final userData = data['user'] ??
+        (data['data'] is Map ? (data['data']['user'] ?? data['data']) : null);
+    if (userData is Map<String, dynamic>) {
+      return UserModel.fromJson(userData);
+    }
+
+    return UserModel(
+      id: 0,
+      name: email.split('@').first,
+      email: email,
+    );
   }
 
   @override
@@ -46,18 +65,52 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
     required String passwordConfirmation,
+    String? role,
+    String? phoneNumber,
   }) async {
     final data = await remoteDataSource.register(
       name: name,
       email: email,
       password: password,
       passwordConfirmation: passwordConfirmation,
+      role: role,
+      phoneNumber: phoneNumber,
     );
 
-    final token = data['token'] as String;
-    await storageService.saveToken(token);
+    // Extract token defensively
+    final token = (data['token'] ??
+            data['access_token'] ??
+            (data['data'] is Map
+                ? (data['data']['token'] ?? data['data']['access_token'])
+                : null))
+        ?.toString();
 
-    return UserModel.fromJson(data['user'] as Map<String, dynamic>);
+    if (token != null && token.isNotEmpty) {
+      await storageService.saveToken(token);
+    } else {
+      // If registration succeeded on backend but didn't return an auth token immediately,
+      // log in to acquire the Sanctum token
+      try {
+        final loggedInUser = await login(email: email, password: password);
+        return loggedInUser;
+      } catch (_) {
+        // Continue if login attempt fails
+      }
+    }
+
+    final userData = data['user'] ??
+        (data['data'] is Map ? (data['data']['user'] ?? data['data']) : null);
+    if (userData is Map<String, dynamic>) {
+      return UserModel.fromJson(userData);
+    }
+
+    return UserModel(
+      id: 0,
+      name: name,
+      email: email,
+      role: role ?? 'client',
+      phoneNumber: phoneNumber,
+    );
   }
 
   @override

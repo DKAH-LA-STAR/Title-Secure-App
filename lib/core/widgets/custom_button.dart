@@ -5,12 +5,14 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final IconData? icon;
 
   const CustomButton({
     super.key,
     required this.text,
     this.onPressed,
     this.isLoading = false,
+    this.icon,
   });
 
   @override
@@ -20,7 +22,7 @@ class CustomButton extends StatelessWidget {
       height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppColors.gold,
           foregroundColor: AppColors.onPrimary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -33,7 +35,16 @@ class CustomButton extends StatelessWidget {
                 height: 24,
                 child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
               )
-            : Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 20),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ],
+              ),
       ),
     );
   }

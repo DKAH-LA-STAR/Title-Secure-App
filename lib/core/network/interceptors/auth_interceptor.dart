@@ -1,14 +1,32 @@
-import 'dart:async';
+import 'package:dio/dio.dart';
+import '../../services/secure_storage.dart';
 
-abstract class AuthInterceptor {
-  static Future<Map<String, String>> getAuthHeaders(String? token) async {
-    final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
+class AuthInterceptor extends Interceptor {
+  final SecureStorageService storageService;
+
+  AuthInterceptor({required this.storageService});
+
+  @override
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    final token = await storageService.getToken();
     if (token != null && token.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
+      options.headers['Authorization'] = 'Bearer $token';
     }
-    return headers;
+    if (options.data is! FormData) {
+      options.headers['Content-Type'] = 'application/json';
+    }
+    options.headers['Accept'] = 'application/json';
+    handler.next(options);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    if (err.response?.statusCode == 401) {
+      storageService.deleteToken();
+    }
+    handler.next(err);
   }
 }

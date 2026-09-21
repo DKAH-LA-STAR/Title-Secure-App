@@ -1,11 +1,11 @@
 {
-    "name": "title_secure",
-    "short_name": "title_secure",
+    "name": "Title Secure",
+    "short_name": "Title Secure",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "a mobile a for title secure",
+    "background_color": "#0A0E1A",
+    "theme_color": "#0A0E1A",
+    "description": "Title Secure - Land Title Verification Platform for Cameroon",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,47 +1,46 @@
 import 'package:flutter/material.dart';
-import '../../../../app/routes/app_routes.dart';
-import '../widgets/stats_card.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+class StatsCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  const StatsCard({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, AppRoutes.login);
-            },
-          ),
-        ],
-      ),
-      body: Padding(
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: const [
-            StatsCard(
-              title: 'Total Users',
-              value: '1,240',
-              icon: Icons.people,
-              color: Colors.blue,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundColor: color.withValues(alpha: 0.15),
+              child: Icon(icon, color: color),
             ),
-            SizedBox(height: 12),
-            StatsCard(
-              title: 'Active Sessions',
-              value: '86',
-              icon: Icons.online_prediction,
-              color: Colors.green,
+            const Spacer(),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(height: 12),
-            StatsCard(
-              title: 'Revenue',
-              value: '\$12,450.50',
-              icon: Icons.attach_money,
-              color: Colors.purple,
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey[600],
+              ),
             ),
           ],
         ),

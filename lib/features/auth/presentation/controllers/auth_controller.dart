@@ -1,13 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/models/user_model.dart';
-import '../../data/repositories/auth_repository.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../core/services/secure_storage.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
+import '../../data/models/user_model.dart';
+import '../../data/repositories/auth_repository.dart';
 
 // Dependency Injection Providers
-final secureStorageProvider = Provider<SecureStorageService>((ref) => FlutterSecureStorageService());
-final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+final secureStorageProvider =
+    Provider<SecureStorageService>((ref) => FlutterSecureStorageService());
+final apiClientProvider = Provider<ApiClient>((ref) {
+  return ApiClient(storageService: ref.watch(secureStorageProvider));
+});
 
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
   return AuthRemoteDataSourceImpl(apiClient: ref.watch(apiClientProvider));
@@ -87,6 +91,8 @@ class AuthController extends StateNotifier<AuthState> {
     required String email,
     required String password,
     required String passwordConfirmation,
+    String? role,
+    String? phoneNumber,
   }) async {
     state = state.copyWith(status: AuthStatus.loading, errorMessage: null);
     try {
@@ -95,6 +101,8 @@ class AuthController extends StateNotifier<AuthState> {
         email: email,
         password: password,
         passwordConfirmation: passwordConfirmation,
+        role: role,
+        phoneNumber: phoneNumber,
       );
       state = state.copyWith(status: AuthStatus.authenticated, user: user);
     } catch (e) {
@@ -112,6 +120,7 @@ class AuthController extends StateNotifier<AuthState> {
   }
 }
 
-final authControllerProvider = StateNotifierProvider<AuthController, AuthState>((ref) {
+final authControllerProvider =
+    StateNotifierProvider<AuthController, AuthState>((ref) {
   return AuthController(ref.watch(authRepositoryProvider));
 });
