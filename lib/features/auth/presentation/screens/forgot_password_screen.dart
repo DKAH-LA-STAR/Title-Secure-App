@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/api_endpoints.dart';
 import '../../../../core/theme/widgets/theme_mode_switch.dart';
-import '../../../../core/widgets/corner_logos_overlay.dart';
 import '../../../../core/widgets/ts_button.dart';
 import '../../../../core/widgets/ts_card.dart';
 import '../../../../core/widgets/ts_text_field.dart';
@@ -63,8 +62,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.background : AppColors.backgroundLight,
-      body: CornerLogosOverlay(
-        child: SafeArea(
+      body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -202,7 +200,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             ),
           ),
         ),
-      ),
     );
   }
 }

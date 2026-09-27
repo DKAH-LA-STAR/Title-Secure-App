@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/widgets/theme_mode_switch.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/widgets/corner_logos_overlay.dart';
 import '../../../../core/widgets/ts_button.dart';
 import '../../../../core/widgets/ts_card.dart';
 import '../../../../core/widgets/ts_text_field.dart';
@@ -106,8 +105,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.background : AppColors.backgroundLight,
-      body: CornerLogosOverlay(
-        child: SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Column(
@@ -388,7 +386,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
           ),
         ),
-      ),
     );
   }
 }

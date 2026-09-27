@@ -3,35 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:title_secure/core/theme/theme_mode_provider.dart';
 import 'package:title_secure/core/widgets/app_scaffold.dart';
-import 'package:title_secure/core/widgets/corner_logos_overlay.dart';
 
 void main() {
-  group('CornerLogosOverlay Tests', () {
-    testWidgets('renders all four corner logos and child content', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: CornerLogosOverlay(
-              child: Center(child: Text('Main Content')),
-            ),
-          ),
-        ),
-      );
-
-      // Verify child content exists
-      expect(find.text('Main Content'), findsOneWidget);
-
-      // Verify 4 corner logos exist (4 Image or Icon fallback widgets inside CornerLogosOverlay)
-      final positionedWidgets = find.descendant(
-        of: find.byType(CornerLogosOverlay),
-        matching: find.byType(Positioned),
-      );
-      expect(positionedWidgets, findsNWidgets(4));
-    });
-  });
-
   group('AppScaffold Tests', () {
-    testWidgets('renders title, theme toggle button, and corner logos', (tester) async {
+    testWidgets('renders title and theme toggle button', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -46,7 +21,6 @@ void main() {
 
       expect(find.text('Test Screen'), findsOneWidget);
       expect(find.text('Body Content'), findsOneWidget);
-      expect(find.byType(CornerLogosOverlay), findsOneWidget);
 
       // Theme toggle tooltip/button is present
       expect(find.byTooltip('Switch to Light Mode'), findsNothing);

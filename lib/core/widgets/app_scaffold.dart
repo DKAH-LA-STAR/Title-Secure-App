@@ -6,12 +6,10 @@ import '../../app/routes/app_routes.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../constants/app_colors.dart';
 import '../theme/theme_mode_provider.dart';
-import 'corner_logos_overlay.dart';
 
 /// Shared scaffold used across Title Secure screens.
 ///
 /// Features:
-///  - **Corner Logos**: Title Secure logo watermark in all four corners of the screen.
 ///  - **Theme Switcher**: Animated Light / Dark theme toggle button in the AppBar.
 ///  - **Back to Dashboard**: Dedicated arrow on sub-pages to navigate directly back to the dashboard.
 class AppScaffold extends ConsumerWidget {
@@ -123,9 +121,7 @@ class AppScaffold extends ConsumerWidget {
       appBar: showAppBar ? effectiveAppBar : null,
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
-      body: CornerLogosOverlay(
-        child: body,
-      ),
+      body: body,
     );
   }
 }

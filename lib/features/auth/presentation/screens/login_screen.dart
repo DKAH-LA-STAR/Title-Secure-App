@@ -7,7 +7,6 @@ import '../../../../app/routes/app_routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/widgets/theme_mode_switch.dart';
 import '../../../../core/widgets/app_logo.dart';
-import '../../../../core/widgets/corner_logos_overlay.dart';
 import '../../../../core/widgets/ts_button.dart';
 import '../../../../core/widgets/ts_card.dart';
 import '../../../../core/widgets/ts_text_field.dart';
@@ -84,8 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.background : AppColors.backgroundLight,
-      body: CornerLogosOverlay(
-        child: SafeArea(
+      body: SafeArea(
         child: Column(
           children: [
             // ─── Header Navigation (Back & Theme Toggle) ─────────────────
@@ -301,7 +299,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ],
         ),
-      ),
       ),
     );
   }

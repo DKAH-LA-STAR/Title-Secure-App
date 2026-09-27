@@ -9,7 +9,6 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/models/land_title_model.dart';
 import '../../../../core/theme/widgets/theme_mode_switch.dart';
 import '../../../../core/widgets/app_scaffold.dart';
-import '../../../../core/widgets/corner_logos_overlay.dart';
 import '../../../../core/widgets/shield_verified_badge.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/ts_button.dart';
@@ -76,8 +75,7 @@ class _PublicVerificationScreenState
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.background : AppColors.backgroundLight,
-      body: CornerLogosOverlay(
-        child: SafeArea(
+      body: SafeArea(
           child: Column(
             children: [
               // ── Header ────────────────────────────────────────────────────
@@ -207,7 +205,6 @@ class _PublicVerificationScreenState
             ],
           ),
         ),
-      ),
     );
   }
 
