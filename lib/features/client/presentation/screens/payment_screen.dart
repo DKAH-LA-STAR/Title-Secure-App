@@ -5,6 +5,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../features/auth/presentation/controllers/auth_controller.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class PaymentScreen extends ConsumerStatefulWidget {
   final String trackingCode;
@@ -106,10 +107,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Verification Fee Payment'),
-      ),
+    return AppScaffold(
+      title: 'Payment',
+      showBackToDashboard: true,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(

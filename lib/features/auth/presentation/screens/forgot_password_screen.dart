@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/api_endpoints.dart';
+import '../../../../core/theme/widgets/theme_mode_switch.dart';
+import '../../../../core/widgets/corner_logos_overlay.dart';
 import '../../../../core/widgets/ts_button.dart';
 import '../../../../core/widgets/ts_card.dart';
 import '../../../../core/widgets/ts_text_field.dart';
@@ -57,26 +59,37 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+      backgroundColor: isDark ? AppColors.background : AppColors.backgroundLight,
+      body: CornerLogosOverlay(
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 children: [
-                  // Back button
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      onPressed: () => context.pop(),
-                      icon: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: AppColors.textPrimary,
+                  // Back button + Theme Toggle
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (context.canPop()) {
+                            context.pop();
+                          } else {
+                            context.go('/login');
+                          }
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: isDark ? AppColors.textPrimary : AppColors.textPrimaryLight,
+                          size: 20,
+                        ),
                       ),
-                    ),
+                      const ThemeToggleButton(),
+                    ],
                   ),
                   const SizedBox(height: 16),
 
@@ -100,10 +113,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
                   const SizedBox(height: 20),
 
-                  const Text(
+                  Text(
                     'Reset Password',
                     style: TextStyle(
-                      color: AppColors.textPrimary,
+                      color: isDark ? AppColors.textPrimary : AppColors.textPrimaryLight,
                       fontSize: 26,
                       fontWeight: FontWeight.w700,
                     ),

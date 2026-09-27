@@ -6,6 +6,7 @@ import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/loading_indicator.dart';
 import '../controllers/client_controllers.dart';
 import '../../data/models/client_request_model.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class ClientTrackScreen extends ConsumerStatefulWidget {
   final String? initialCode;
@@ -44,10 +45,10 @@ class _ClientTrackScreenState extends ConsumerState<ClientTrackScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(clientTrackControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Track Request Progress'),
-      ),
+    return AppScaffold(
+      title: 'Track Request',
+      showBackToDashboard: true,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(

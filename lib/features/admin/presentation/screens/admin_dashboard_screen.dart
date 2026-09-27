@@ -6,6 +6,8 @@ import '../../../../core/widgets/loading_indicator.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../controllers/admin_controller.dart';
 import '../../data/models/admin_models.dart';
+import '../../../../app/routes/app_routes.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
@@ -15,25 +17,27 @@ class AdminDashboardScreen extends ConsumerWidget {
     final state = ref.watch(adminControllerProvider);
     final stats = state.stats;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Detection Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sms),
-            tooltip: 'Broadcast SMS',
-            onPressed: () => context.go('/admin/broadcast-sms'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => ref.read(adminControllerProvider.notifier).loadDashboardData(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authControllerProvider.notifier).logout(),
-          ),
-        ],
-      ),
+    return AppScaffold(
+      title: 'Admin Dashboard',
+      showBackToDashboard: false,
+      extraActions: [
+        IconButton(
+          icon: const Icon(Icons.sms_outlined),
+          tooltip: 'Broadcast SMS',
+          onPressed: () => context.go(AppRoutes.adminBroadcastSms),
+        ),
+        IconButton(
+          icon: const Icon(Icons.refresh_rounded),
+          tooltip: 'Refresh',
+          onPressed: () => ref.read(adminControllerProvider.notifier).loadDashboardData(),
+        ),
+        IconButton(
+          icon: const Icon(Icons.logout_rounded),
+          tooltip: 'Sign Out',
+          onPressed: () => ref.read(authControllerProvider.notifier).logout(),
+        ),
+      ],
+
       body: RefreshIndicator(
         onRefresh: () => ref.read(adminControllerProvider.notifier).loadDashboardData(),
         child: SingleChildScrollView(

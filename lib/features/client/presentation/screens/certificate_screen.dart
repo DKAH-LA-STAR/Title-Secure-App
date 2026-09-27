@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class CertificateScreen extends StatelessWidget {
   final String titleNumber;
@@ -23,11 +24,10 @@ class CertificateScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final qrData = qrHash ?? titleNumber;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Verified Land Certificate'),
-        elevation: 0,
-      ),
+    return AppScaffold(
+      title: 'Certificate',
+      showBackToDashboard: true,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(

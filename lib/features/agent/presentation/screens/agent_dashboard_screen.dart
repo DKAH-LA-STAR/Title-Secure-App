@@ -7,6 +7,7 @@ import '../../../../core/widgets/loading_indicator.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../controllers/agent_controller.dart';
 import '../../data/models/extraction_model.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class AgentDashboardScreen extends ConsumerStatefulWidget {
   const AgentDashboardScreen({super.key});
@@ -60,20 +61,22 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(agentControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Land Agent Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => ref.read(agentControllerProvider.notifier).fetchExtractions(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authControllerProvider.notifier).logout(),
-          ),
-        ],
-      ),
+    return AppScaffold(
+      title: 'Agent Dashboard',
+      showBackToDashboard: false,
+      extraActions: [
+        IconButton(
+          icon: const Icon(Icons.refresh_rounded),
+          tooltip: 'Refresh',
+          onPressed: () => ref.read(agentControllerProvider.notifier).fetchExtractions(),
+        ),
+        IconButton(
+          icon: const Icon(Icons.logout_rounded),
+          tooltip: 'Sign Out',
+          onPressed: () => ref.read(authControllerProvider.notifier).logout(),
+        ),
+      ],
+
       body: RefreshIndicator(
         onRefresh: () => ref.read(agentControllerProvider.notifier).fetchExtractions(),
         child: SingleChildScrollView(

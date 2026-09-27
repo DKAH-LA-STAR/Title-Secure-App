@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class ClientDashboardScreen extends ConsumerWidget {
   const ClientDashboardScreen({super.key});
@@ -12,19 +13,19 @@ class ClientDashboardScreen extends ConsumerWidget {
     final authState = ref.watch(authControllerProvider);
     final user = authState.user;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Client Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign Out',
-            onPressed: () {
-              ref.read(authControllerProvider.notifier).logout();
-            },
-          ),
-        ],
-      ),
+    return AppScaffold(
+      title: 'Client Dashboard',
+      showBackToDashboard: false,
+      extraActions: [
+        IconButton(
+          icon: const Icon(Icons.logout),
+          tooltip: 'Sign Out',
+          onPressed: () {
+            ref.read(authControllerProvider.notifier).logout();
+          },
+        ),
+      ],
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(

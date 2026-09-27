@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 
 /// Title Secure design token palette.
-/// All colors match the Figma spec for the dark-navy glassmorphism theme.
+/// Uniform blue theme throughout the app.
 abstract class AppColors {
   // ─── Backgrounds ──────────────────────────────────────────────────────────
-  static const Color background = Color(0xFF0A0E1A); // Deep navy
-  static const Color surface = Color(0xFF111827); // Card surface
-  static const Color surfaceVariant = Color(0xFF1F2937); // Elevated surface
+  static const Color background = Color(0xFF0A0F1E); // Deep navy blue
+  static const Color surface = Color(0xFF0D1B2A); // Card surface
+  static const Color surfaceVariant = Color(0xFF1A2A40); // Elevated surface
 
   // ─── Brand ────────────────────────────────────────────────────────────────
-  static const Color primary = Color(0xFFF59E0B); // Amber/gold
-  static const Color primaryDark = Color(0xFFD97706); // Darker amber
-  static const Color secondary = Color(0xFF14B8A6); // Teal
-  static const Color secondaryDark = Color(0xFF0D9488); // Darker teal
+  static const Color primary = Color(0xFF1565C0); // Primary blue
+  static const Color primaryDark = Color(0xFF0D47A1); // Darker blue
+  static const Color secondary = Color(0xFF1E88E5); // Medium blue
+  static const Color secondaryDark = Color(0xFF1565C0); // Darker medium blue
 
   // ─── Role Accents ─────────────────────────────────────────────────────────
-  static const Color adminAccent = Color(0xFF7C3AED); // Purple (admin)
-  static const Color agentAccent = Color(0xFF3B82F6); // Blue (agent)
-  static const Color notaryAccent = Color(0xFF8B5CF6); // Violet (notary)
+  static const Color adminAccent = Color(0xFF0288D1); // Light blue (admin)
+  static const Color agentAccent = Color(0xFF1976D2); // Blue (agent)
+  static const Color notaryAccent = Color(0xFF01579B); // Dark blue (notary)
 
   // ─── Semantic ─────────────────────────────────────────────────────────────
   static const Color danger = Color(0xFFEF4444); // Red
   static const Color dangerLight = Color(0xFFFCA5A5);
   static const Color success = Color(0xFF10B981); // Green
   static const Color successLight = Color(0xFF6EE7B7);
-  static const Color warning = Color(0xFFF59E0B); // Amber (same as primary)
+  static const Color warning = Color(0xFFF59E0B); // Amber
   static const Color warningLight = Color(0xFFFCD34D);
-  static const Color info = Color(0xFF3B82F6); // Blue
+  static const Color info = Color(0xFF1E88E5); // Blue
 
   // ─── Text ─────────────────────────────────────────────────────────────────
   static const Color textPrimary = Color(0xFFF9FAFB);
@@ -35,45 +35,45 @@ abstract class AppColors {
   static const Color textDisabled = Color(0xFF374151);
 
   // ─── Borders & Dividers ───────────────────────────────────────────────────
-  static const Color border = Color(0xFF1F2937);
-  static const Color borderSubtle = Color(0xFF374151);
-  static const Color borderGold = Color(0x33F59E0B); // 20% amber
+  static const Color border = Color(0xFF1A2A40);
+  static const Color borderSubtle = Color(0xFF243B55);
+  static const Color borderGold = Color(0x331565C0); // 20% primary blue
 
   // ─── Status badge backgrounds (semi-transparent) ─────────────────────────
-  static const Color pendingBg = Color(0x1FF59E0B);
+  static const Color pendingBg = Color(0x1F1E88E5);
   static const Color verifiedBg = Color(0x1F10B981);
   static const Color rejectedBg = Color(0x1FEF4444);
-  static const Color paidBg = Color(0x1F14B8A6);
+  static const Color paidBg = Color(0x1F1565C0);
   static const Color unpaidBg = Color(0x1F6B7280);
 
-  // ─── Gold & Brand Accents ────────────────────────────────────────────────
-  static const Color gold = Color(0xFFFFD700); // Standard vibrant Gold
-  static const Color goldMetallic = Color(0xFFD4AF37); // Classic Metallic Gold
-  static const Color goldDark = Color(0xFFC59B27); // Rich Antique Gold
-  static const Color goldLight = Color(0xFFFFE57F); // Light Gold Highlight
-  static const Color onGold = Color(0xFF0A0E1A); // Deep navy for high contrast on gold
+  // ─── Blue Brand Accents ───────────────────────────────────────────────────
+  static const Color gold = Color(0xFF1565C0); // Mapped to primary blue
+  static const Color goldMetallic = Color(0xFF1976D2); // Blue variant
+  static const Color goldDark = Color(0xFF0D47A1); // Dark blue
+  static const Color goldLight = Color(0xFF42A5F5); // Light blue highlight
+  static const Color onGold = Color(0xFFF9FAFB); // White text on blue
 
   // ─── Gradients ────────────────────────────────────────────────────────────
   static const LinearGradient goldGradient = LinearGradient(
-    colors: [Color(0xFFFFD700), Color(0xFFD4AF37)],
+    colors: [Color(0xFF1E88E5), Color(0xFF1565C0)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [Color(0xFFFFD700), Color(0xFFD4AF37)],
+    colors: [Color(0xFF1E88E5), Color(0xFF1565C0)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient secondaryGradient = LinearGradient(
-    colors: [Color(0xFF14B8A6), Color(0xFF0D9488)],
+    colors: [Color(0xFF1565C0), Color(0xFF0D47A1)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient adminGradient = LinearGradient(
-    colors: [Color(0xFF7C3AED), Color(0xFF5B21B6)],
+    colors: [Color(0xFF0288D1), Color(0xFF01579B)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -85,38 +85,38 @@ abstract class AppColors {
   );
 
   static const LinearGradient backgroundGradient = LinearGradient(
-    colors: [Color(0xFF0A0E1A), Color(0xFF0F172A)],
+    colors: [Color(0xFF0A0F1E), Color(0xFF0D1B2A)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
 
   // ─── Light Mode Tokens ───────────────────────────────────────────────────
-  static const Color backgroundLight = Color(0xFFF8FAFC); // Slate 50
+  static const Color backgroundLight = Color(0xFFF0F4FF); // Light blue tint
   static const Color surfaceLight = Color(0xFFFFFFFF); // Pure white
-  static const Color surfaceVariantLight = Color(0xFFF1F5F9); // Slate 100
-  static const Color textPrimaryLight = Color(0xFF0F172A); // Slate 900
-  static const Color textSecondaryLight = Color(0xFF475569); // Slate 600
-  static const Color textMutedLight = Color(0xFF94A3B8); // Slate 400
-  static const Color textDisabledLight = Color(0xFFCBD5E1); // Slate 300
-  static const Color borderLight = Color(0xFFE2E8F0); // Slate 200
-  static const Color borderSubtleLight = Color(0xFFF1F5F9);
-  static const Color borderGoldLight = Color(0x66F59E0B); // 40% amber
+  static const Color surfaceVariantLight = Color(0xFFE3EAF8); // Blue-tinted slate
+  static const Color textPrimaryLight = Color(0xFF0D1B2A); // Deep navy
+  static const Color textSecondaryLight = Color(0xFF1A3A5C); // Dark blue-grey
+  static const Color textMutedLight = Color(0xFF4A6FA5); // Muted blue
+  static const Color textDisabledLight = Color(0xFFB0C4DE); // Light steel blue
+  static const Color borderLight = Color(0xFFBDD0E8); // Light blue border
+  static const Color borderSubtleLight = Color(0xFFE3EAF8);
+  static const Color borderGoldLight = Color(0x661565C0); // 40% primary blue
 
   // ─── Glassmorphism ────────────────────────────────────────────────────────
-  static const Color glassBackground = Color(0xCC111827); // 80% #111827
+  static const Color glassBackground = Color(0xCC0D1B2A); // 80% surface
   static const Color glassBackgroundLight = Color(0xF2FFFFFF); // 95% white
-  static const Color glassBorder = Color(0x33F9FAFB); // 20% white
-  static const Color glassBorderLight = Color(0x1F0F172A); // 12% slate
+  static const Color glassBorder = Color(0x331E88E5); // 20% blue
+  static const Color glassBorderLight = Color(0x1F1565C0); // 12% blue
 
   // ─── Shimmer ──────────────────────────────────────────────────────────────
-  static const Color shimmerBase = Color(0xFF1F2937);
-  static const Color shimmerHighlight = Color(0xFF374151);
-  static const Color shimmerBaseLight = Color(0xFFE2E8F0);
-  static const Color shimmerHighlightLight = Color(0xFFF8FAFC);
+  static const Color shimmerBase = Color(0xFF1A2A40);
+  static const Color shimmerHighlight = Color(0xFF243B55);
+  static const Color shimmerBaseLight = Color(0xFFBDD0E8);
+  static const Color shimmerHighlightLight = Color(0xFFE3EAF8);
 
   // ─── On-colors (for text/icons on brand colors) ───────────────────────────
-  static const Color onPrimary = Color(0xFF0A0E1A);
-  static const Color onSecondary = Color(0xFF0A0E1A);
+  static const Color onPrimary = Color(0xFFF9FAFB);
+  static const Color onSecondary = Color(0xFFF9FAFB);
   static const Color onSurface = Color(0xFFF9FAFB);
   static const Color onBackground = Color(0xFFF9FAFB);
 }

@@ -5,6 +5,7 @@ import '../../../../core/widgets/loading_indicator.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../controllers/notary_controller.dart';
 import '../../data/models/notary_exception_model.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class NotaryExceptionReviewScreen extends ConsumerWidget {
   const NotaryExceptionReviewScreen({super.key});
@@ -136,20 +137,22 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(notaryControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notary Exception Review'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => ref.read(notaryControllerProvider.notifier).fetchExceptions(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authControllerProvider.notifier).logout(),
-          ),
-        ],
-      ),
+    return AppScaffold(
+      title: 'Notary Review',
+      showBackToDashboard: false,
+      extraActions: [
+        IconButton(
+          icon: const Icon(Icons.refresh_rounded),
+          tooltip: 'Refresh',
+          onPressed: () => ref.read(notaryControllerProvider.notifier).fetchExceptions(),
+        ),
+        IconButton(
+          icon: const Icon(Icons.logout_rounded),
+          tooltip: 'Sign Out',
+          onPressed: () => ref.read(authControllerProvider.notifier).logout(),
+        ),
+      ],
+
       body: RefreshIndicator(
         onRefresh: () => ref.read(notaryControllerProvider.notifier).fetchExceptions(),
         child: SingleChildScrollView(

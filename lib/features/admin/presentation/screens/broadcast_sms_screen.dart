@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../controllers/admin_controller.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class BroadcastSmsScreen extends ConsumerStatefulWidget {
   const BroadcastSmsScreen({super.key});
@@ -76,10 +77,10 @@ class _BroadcastSmsScreenState extends ConsumerState<BroadcastSmsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Broadcast SMS Notification'),
-      ),
+    return AppScaffold(
+      title: 'Broadcast SMS',
+      showBackToDashboard: true,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(

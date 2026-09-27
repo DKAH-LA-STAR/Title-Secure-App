@@ -4,13 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/models/land_title_model.dart';
+import '../../../../core/theme/widgets/theme_mode_switch.dart';
+import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../core/widgets/corner_logos_overlay.dart';
 import '../../../../core/widgets/shield_verified_badge.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/ts_button.dart';
 import '../../../../core/widgets/ts_card.dart';
 import '../../../../core/widgets/ts_text_field.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../controllers/public_controller.dart';
 
 class PublicVerificationScreen extends ConsumerStatefulWidget {
@@ -65,11 +70,13 @@ class _PublicVerificationScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(publicVerificationControllerProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final authState = ref.watch(authControllerProvider);
+    final role = authState.user?.role;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+      backgroundColor: isDark ? AppColors.background : AppColors.backgroundLight,
+      body: CornerLogosOverlay(
         child: SafeArea(
           child: Column(
             children: [
@@ -79,30 +86,40 @@ class _PublicVerificationScreenState
                 child: Row(
                   children: [
                     GestureDetector(
-                      onTap: () => context.pop(),
+                      onTap: () {
+                        if (role != null && role.isNotEmpty) {
+                          context.go(AppScaffold.dashboardRouteForRole(role));
+                        } else if (context.canPop()) {
+                          context.pop();
+                        } else {
+                          context.go(AppRoutes.welcome);
+                        }
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppColors.surface,
+                          color: isDark ? AppColors.surface : AppColors.surfaceLight,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(
+                            color: isDark ? AppColors.border : AppColors.borderLight,
+                          ),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.arrow_back_ios_rounded,
-                          color: AppColors.textPrimary,
+                          color: isDark ? AppColors.textPrimary : AppColors.textPrimaryLight,
                           size: 18,
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Verify Land Title',
                             style: TextStyle(
-                              color: AppColors.textPrimary,
+                              color: isDark ? AppColors.textPrimary : AppColors.textPrimaryLight,
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                             ),
@@ -110,20 +127,29 @@ class _PublicVerificationScreenState
                           Text(
                             'Free public verification',
                             style: TextStyle(
-                              color: AppColors.textMuted,
+                              color: isDark ? AppColors.textMuted : AppColors.textMutedLight,
                               fontSize: 13,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    TextButton(
-                      onPressed: () => context.push('/login'),
-                      child: const Text(
-                        'Sign In',
-                        style: TextStyle(color: AppColors.primary),
+                    const ThemeToggleButton(),
+                    const SizedBox(width: 4),
+                    if (role == null || role.isEmpty)
+                      TextButton(
+                        onPressed: () => context.push('/login'),
+                        child: const Text(
+                          'Sign In',
+                          style: TextStyle(color: AppColors.primary),
+                        ),
+                      )
+                    else
+                      IconButton(
+                        icon: const Icon(Icons.dashboard_rounded, color: AppColors.primary),
+                        tooltip: 'Go to Dashboard',
+                        onPressed: () => context.go(AppScaffold.dashboardRouteForRole(role)),
                       ),
-                    ),
                   ],
                 ),
               ).animate().fade(duration: 400.ms),

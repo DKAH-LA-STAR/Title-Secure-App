@@ -7,6 +7,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../controllers/client_controllers.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 
 class ClientSubmitScreen extends ConsumerStatefulWidget {
   const ClientSubmitScreen({super.key});
@@ -157,10 +158,10 @@ class _ClientSubmitScreenState extends ConsumerState<ClientSubmitScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(clientSubmitControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Submit Verification Request'),
-      ),
+    return AppScaffold(
+      title: 'Submit Request',
+      showBackToDashboard: true,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Form(
