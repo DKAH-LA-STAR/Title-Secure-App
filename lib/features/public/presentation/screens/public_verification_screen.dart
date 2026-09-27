@@ -209,6 +209,7 @@ class _PublicVerificationScreenState
   }
 
   Widget _buildManualSearchTab(VerificationState state) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -218,10 +219,10 @@ class _PublicVerificationScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Enter the land title number',
                   style: TextStyle(
-                    color: AppColors.textSecondary,
+                    color: isDark ? const Color(0xFFE5E7EB) : Colors.black87,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -314,19 +315,23 @@ class _PublicVerificationScreenState
                         ),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
+                      Text(
                         'Scan QR Code on Document',
                         style: TextStyle(
-                          color: AppColors.textPrimary,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'Point your camera at the QR code\nprinted on the official land title document.',
                         style: TextStyle(
-                          color: AppColors.textMuted,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? AppColors.textMuted
+                              : AppColors.textMutedLight,
                           fontSize: 13,
                           height: 1.5,
                         ),
@@ -449,9 +454,14 @@ class _TitleResultCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Status',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFFE5E7EB)
+                      : Colors.black87,
+                  fontSize: 13,
+                ),
               ),
               StatusBadge(status: title.validityStatus),
             ],
@@ -469,18 +479,22 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+          style: TextStyle(
+            color: isDark ? const Color(0xFFE5E7EB) : Colors.black87,
+            fontSize: 13,
+          ),
         ),
         Flexible(
           child: Text(
             value,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),

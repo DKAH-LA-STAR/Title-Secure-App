@@ -167,6 +167,8 @@ class ClientDashboardScreen extends ConsumerWidget {
     required Color color,
     required VoidCallback onTap,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -189,9 +191,10 @@ class ClientDashboardScreen extends ConsumerWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -199,13 +202,13 @@ class ClientDashboardScreen extends ConsumerWidget {
                       subtitle,
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: isDark ? Colors.white70 : Colors.black87,
                       ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey.shade400),
+              Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.white54 : Colors.black54),
             ],
           ),
         ),

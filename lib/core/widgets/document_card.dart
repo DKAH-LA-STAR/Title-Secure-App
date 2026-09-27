@@ -55,15 +55,17 @@ class DocumentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: isDark ? AppColors.surface : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: isDark ? AppColors.border : AppColors.borderLight),
         ),
         child: Row(
           children: [
@@ -85,8 +87,8 @@ class DocumentCard extends StatelessWidget {
                     fileName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -95,8 +97,10 @@ class DocumentCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       fileSize!,
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
+                      style: TextStyle(
+                        color: isDark
+                            ? const Color(0xFFE5E7EB)
+                            : Colors.black87,
                         fontSize: 12,
                       ),
                     ),
@@ -111,10 +115,10 @@ class DocumentCard extends StatelessWidget {
             if (onDelete != null) ...[
               const SizedBox(width: 4),
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.close_rounded,
                   size: 18,
-                  color: AppColors.textMuted,
+                  color: isDark ? Colors.white54 : Colors.black54,
                 ),
                 onPressed: onDelete,
                 padding: EdgeInsets.zero,

@@ -31,8 +31,20 @@ abstract class AppColors {
   // ─── Text ─────────────────────────────────────────────────────────────────
   static const Color textPrimary = Color(0xFFF9FAFB);
   static const Color textSecondary = Color(0xFFD1D5DB);
-  static const Color textMuted = Color(0xFF6B7280);
+  static const Color textMuted = Color(0xFF9CA3AF);
   static const Color textDisabled = Color(0xFF374151);
+
+  /// Returns white in dark mode, black in light mode.
+  static Color adaptiveText(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black;
+
+  /// Returns off-white in dark mode, dark slate in light mode.
+  static Color adaptiveSecondary(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? const Color(0xFFE5E7EB) : const Color(0xFF1F2937);
+
+  /// Returns light gray in dark mode, medium dark in light mode.
+  static Color adaptiveMuted(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? const Color(0xFF9CA3AF) : const Color(0xFF4B5563);
 
   // ─── Borders & Dividers ───────────────────────────────────────────────────
   static const Color border = Color(0xFF1A2A40);
@@ -94,10 +106,10 @@ abstract class AppColors {
   static const Color backgroundLight = Color(0xFFF0F4FF); // Light blue tint
   static const Color surfaceLight = Color(0xFFFFFFFF); // Pure white
   static const Color surfaceVariantLight = Color(0xFFE3EAF8); // Blue-tinted slate
-  static const Color textPrimaryLight = Color(0xFF0D1B2A); // Deep navy
-  static const Color textSecondaryLight = Color(0xFF1A3A5C); // Dark blue-grey
-  static const Color textMutedLight = Color(0xFF4A6FA5); // Muted blue
-  static const Color textDisabledLight = Color(0xFFB0C4DE); // Light steel blue
+  static const Color textPrimaryLight = Color(0xFF000000); // Pure black
+  static const Color textSecondaryLight = Color(0xFF1F2937); // Dark near-black
+  static const Color textMutedLight = Color(0xFF374151); // Dark charcoal for high visibility
+  static const Color textDisabledLight = Color(0xFF6B7280);
   static const Color borderLight = Color(0xFFBDD0E8); // Light blue border
   static const Color borderSubtleLight = Color(0xFFE3EAF8);
   static const Color borderGoldLight = Color(0x661565C0); // 40% primary blue

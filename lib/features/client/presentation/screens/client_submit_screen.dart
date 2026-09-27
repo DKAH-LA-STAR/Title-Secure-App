@@ -83,7 +83,11 @@ class _ClientSubmitScreenState extends ConsumerState<ClientSubmitScreen> {
           children: [
             Text(
               'Your title verification request has been successfully created. Keep your tracking code safe:',
-              style: TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white70
+                    : Colors.black87,
+              ),
             ),
             const SizedBox(height: 16),
             Container(
@@ -157,6 +161,8 @@ class _ClientSubmitScreenState extends ConsumerState<ClientSubmitScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(clientSubmitControllerProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textSecondary = isDark ? const Color(0xFFE5E7EB) : Colors.black87;
 
     return AppScaffold(
       title: 'Submit Request',
@@ -185,7 +191,7 @@ class _ClientSubmitScreenState extends ConsumerState<ClientSubmitScreen> {
                       Expanded(
                         child: Text(
                           'Upload land title deed or certificate scan (.pdf, .jpg, .png) for automated verification.',
-                          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                          style: TextStyle(fontSize: 13, color: textSecondary),
                         ),
                       ),
                     ],
@@ -238,18 +244,22 @@ class _ClientSubmitScreenState extends ConsumerState<ClientSubmitScreen> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: _selectedFile != null ? AppColors.primary : Colors.grey.shade400,
+                      color: _selectedFile != null
+                          ? AppColors.primary
+                          : (isDark ? AppColors.border : Colors.grey.shade400),
                       width: 1.5,
                     ),
                     borderRadius: BorderRadius.circular(12),
-                    color: _selectedFile != null ? AppColors.primary.withValues(alpha: 0.05) : Colors.grey.shade50,
+                    color: _selectedFile != null
+                        ? AppColors.primary.withValues(alpha: 0.05)
+                        : (isDark ? AppColors.surfaceVariant : Colors.grey.shade50),
                   ),
                   child: Column(
                     children: [
                       Icon(
                         _selectedFile != null ? Icons.insert_drive_file : Icons.cloud_upload_outlined,
                         size: 36,
-                        color: _selectedFile != null ? AppColors.primary : AppColors.textSecondary,
+                        color: _selectedFile != null ? AppColors.primary : (isDark ? Colors.white54 : Colors.black54),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -258,14 +268,14 @@ class _ClientSubmitScreenState extends ConsumerState<ClientSubmitScreen> {
                             : 'Select PDF deed or image scan (.pdf, .jpg, .png)',
                         style: TextStyle(
                           fontWeight: _selectedFile != null ? FontWeight.bold : FontWeight.normal,
-                          color: _selectedFile != null ? AppColors.primary : AppColors.textSecondary,
+                          color: _selectedFile != null ? AppColors.primary : textSecondary,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       if (_selectedFile != null)
                         Text(
                           '${(_selectedFile!.size / 1024).toStringAsFixed(1)} KB',
-                          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                          style: TextStyle(fontSize: 12, color: textSecondary),
                         ),
                     ],
                   ),

@@ -88,7 +88,7 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.5,
-                        color: isDark ? AppColors.textSecondary : AppColors.textSecondaryLight,
+                        color: isDark ? AppColors.textSecondary : Colors.black87,
                       ),
                     ).animate().fade(delay: 250.ms, duration: 400.ms),
 
@@ -215,7 +215,7 @@ class WelcomeScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.4,
-                    color: isDark ? AppColors.textMuted : AppColors.textSecondaryLight,
+                    color: isDark ? AppColors.textSecondary : Colors.black87,
                   ),
                 ),
               ],

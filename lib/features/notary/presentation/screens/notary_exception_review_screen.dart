@@ -136,6 +136,8 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(notaryControllerProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textSecondary = isDark ? const Color(0xFFE5E7EB) : Colors.black87;
 
     return AppScaffold(
       title: 'Notary Review',
@@ -164,7 +166,7 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
               // Header Card
               Card(
                 elevation: 0,
-                color: Colors.amber.shade900,
+                color: isDark ? AppColors.surfaceVariant : Colors.amber.shade900,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -206,11 +208,14 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.green.shade50,
+                    color: isDark ? Colors.green.shade900.withValues(alpha: 0.3) : Colors.green.shade50,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.green.shade200),
+                    border: Border.all(color: isDark ? Colors.green.shade700 : Colors.green.shade200),
                   ),
-                  child: Text(state.successMessage!, style: TextStyle(color: Colors.green.shade900)),
+                  child: Text(
+                    state.successMessage!,
+                    style: TextStyle(color: isDark ? Colors.green.shade200 : Colors.green.shade900),
+                  ),
                 ),
               ],
 
@@ -219,11 +224,14 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade50,
+                    color: isDark ? Colors.red.shade900.withValues(alpha: 0.3) : Colors.red.shade50,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.red.shade200),
+                    border: Border.all(color: isDark ? Colors.red.shade700 : Colors.red.shade200),
                   ),
-                  child: Text(state.errorMessage!, style: TextStyle(color: Colors.red.shade900)),
+                  child: Text(
+                    state.errorMessage!,
+                    style: TextStyle(color: isDark ? Colors.red.shade200 : Colors.red.shade900),
+                  ),
                 ),
               ],
 
@@ -251,13 +259,13 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
               else if (state.exceptions.isEmpty)
                 Card(
                   elevation: 0,
-                  color: Colors.grey.shade100,
+                  color: isDark ? AppColors.surfaceVariant : Colors.grey.shade100,
                   child: Padding(
                     padding: const EdgeInsets.all(30.0),
                     child: Center(
                       child: Text(
                         'No flagged exceptions pending review.',
-                        style: TextStyle(color: AppColors.textSecondary),
+                        style: TextStyle(color: textSecondary),
                       ),
                     ),
                   ),
@@ -270,7 +278,7 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final item = state.exceptions[index];
                     final isBusy = state.actionId == item.id;
-                    return _buildExceptionItemCard(context, ref, item, isBusy);
+                    return _buildExceptionItemCard(context, ref, item, isBusy, isDark);
                   },
                 ),
             ],
@@ -285,6 +293,7 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
     WidgetRef ref,
     NotaryExceptionModel item,
     bool isBusy,
+    bool isDark,
   ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 14),
@@ -337,12 +346,16 @@ class NotaryExceptionReviewScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: isDark ? AppColors.surfaceVariant : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   'OCR Text Snippet:\n${item.rawOcrText!}',
-                  style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontFamily: 'monospace',
+                    color: isDark ? const Color(0xFFE5E7EB) : Colors.black87,
+                  ),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),

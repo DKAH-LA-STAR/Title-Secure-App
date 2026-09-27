@@ -144,7 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Text(
                         'Sign in to your Title Secure account',
                         style: TextStyle(
-                          color: isDark ? AppColors.textMuted : AppColors.textSecondaryLight,
+                          color: isDark ? AppColors.textSecondary : Colors.black87,
                           fontSize: 14,
                         ),
                       ).animate(delay: 200.ms).fade(),
@@ -259,9 +259,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         "Don't have an account?",
-                        style: TextStyle(color: AppColors.textMuted),
+                        style: TextStyle(color: isDark ? AppColors.textSecondary : Colors.black87),
                       ),
                       TextButton(
                         onPressed: () => context.push('/register'),

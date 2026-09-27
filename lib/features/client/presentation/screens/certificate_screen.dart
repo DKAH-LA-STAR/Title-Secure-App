@@ -23,6 +23,7 @@ class CertificateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final qrData = qrHash ?? titleNumber;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AppScaffold(
       title: 'Certificate',
@@ -34,16 +35,18 @@ class CertificateScreen extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? AppColors.surface : Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
+                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
                 ],
-                border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                border: Border.all(
+                  color: isDark ? AppColors.border : AppColors.primary.withValues(alpha: 0.2),
+                ),
               ),
               child: Column(
                 children: [
@@ -101,25 +104,32 @@ class CertificateScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
 
-                        _buildInfoRow('Title Number', titleNumber),
-                        _buildInfoRow('Owner Name', ownerName),
-                        _buildInfoRow('Parcel Reference', parcelReference),
-                        _buildInfoRow('Issue Date', '04 Sept 2026'),
+                        _buildInfoRow('Title Number', titleNumber, isDark),
+                        _buildInfoRow('Owner Name', ownerName, isDark),
+                        _buildInfoRow('Parcel Reference', parcelReference, isDark),
+                        _buildInfoRow('Issue Date', '04 Sept 2026', isDark),
 
                         const Divider(height: 32),
 
                         // QR Code Display
-                        QrImageView(
-                          data: qrData,
-                          version: QrVersions.auto,
-                          size: 160.0,
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: QrImageView(
+                            data: qrData,
+                            version: QrVersions.auto,
+                            size: 160.0,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Scan to verify authenticity',
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textSecondary,
+                            color: isDark ? const Color(0xFFE5E7EB) : Colors.black87,
                           ),
                         ),
                       ],
@@ -145,7 +155,7 @@ class CertificateScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value, bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -153,17 +163,17 @@ class CertificateScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
+            style: TextStyle(
+              color: isDark ? const Color(0xFFE5E7EB) : Colors.black87,
               fontSize: 14,
             ),
           ),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 15,
-              color: AppColors.textPrimary,
+              color: isDark ? Colors.white : Colors.black,
             ),
           ),
         ],

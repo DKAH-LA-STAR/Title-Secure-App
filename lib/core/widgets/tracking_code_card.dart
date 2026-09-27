@@ -37,8 +37,10 @@ class TrackingCodeCard extends StatelessWidget {
           if (label != null)
             Text(
               label!,
-              style: const TextStyle(
-                color: AppColors.textMuted,
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.textSecondary
+                    : Colors.black87,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),

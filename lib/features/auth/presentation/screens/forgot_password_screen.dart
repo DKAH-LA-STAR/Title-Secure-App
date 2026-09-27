@@ -122,9 +122,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
                   const SizedBox(height: 8),
 
-                  const Text(
+                  Text(
                     'Enter your email to receive a reset link',
-                    style: TextStyle(color: AppColors.textMuted, fontSize: 14),
+                    style: TextStyle(color: isDark ? AppColors.textSecondary : Colors.black87, fontSize: 14),
                     textAlign: TextAlign.center,
                   ).animate(delay: 150.ms).fade(),
 
@@ -153,8 +153,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           const SizedBox(height: 8),
                           Text(
                             'Check ${_emailController.text} for instructions.',
-                            style: const TextStyle(
-                              color: AppColors.textMuted,
+                            style: TextStyle(
+                              color: isDark ? AppColors.textSecondary : Colors.black87,
                               fontSize: 14,
                             ),
                             textAlign: TextAlign.center,

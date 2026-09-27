@@ -1,12 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/loading_indicator.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../controllers/agent_controller.dart';
 import '../../data/models/extraction_model.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_scaffold.dart';
 
 class AgentDashboardScreen extends ConsumerStatefulWidget {
@@ -60,6 +60,8 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(agentControllerProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textSecondary = isDark ? const Color(0xFFE5E7EB) : Colors.black87;
 
     return AppScaffold(
       title: 'Agent Dashboard',
@@ -88,7 +90,7 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
               // Header card
               Card(
                 elevation: 0,
-                color: Colors.blue.shade900,
+                color: isDark ? AppColors.surfaceVariant : Colors.blue.shade900,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -219,7 +221,7 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
                   ),
                   Text(
                     '${state.extractions.length} items',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(color: textSecondary),
                   ),
                 ],
               ),
@@ -230,13 +232,13 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
               else if (state.extractions.isEmpty)
                 Card(
                   elevation: 0,
-                  color: Colors.grey.shade100,
+                  color: isDark ? AppColors.surfaceVariant : Colors.grey.shade100,
                   child: Padding(
                     padding: const EdgeInsets.all(30.0),
                     child: Center(
                       child: Text(
                         'No extractions found. Upload a document above.',
-                        style: TextStyle(color: AppColors.textSecondary),
+                        style: TextStyle(color: textSecondary),
                       ),
                     ),
                   ),
@@ -248,7 +250,7 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
                   itemCount: state.extractions.length,
                   itemBuilder: (context, index) {
                     final item = state.extractions[index];
-                    return _buildExtractionCard(item, state.processingOcrId == item.id);
+                    return _buildExtractionCard(item, state.processingOcrId == item.id, isDark);
                   },
                 ),
             ],
@@ -258,7 +260,7 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
     );
   }
 
-  Widget _buildExtractionCard(ExtractionModel item, bool isProcessing) {
+  Widget _buildExtractionCard(ExtractionModel item, bool isProcessing, bool isDark) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
@@ -293,7 +295,11 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
                 padding: const EdgeInsets.only(top: 6.0),
                 child: Text(
                   'Exception: ${item.exceptionReason ?? "Flagged for Notary review"}',
-                  style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w600, fontSize: 12),
+                  style: TextStyle(
+                    color: isDark ? Colors.orange.shade300 : Colors.orange.shade900,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             if (item.rawText != null)
@@ -301,14 +307,18 @@ class _AgentDashboardScreenState extends ConsumerState<AgentDashboardScreen> {
                 margin: const EdgeInsets.only(top: 8),
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: isDark ? AppColors.surfaceVariant : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   item.rawText!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontFamily: 'monospace',
+                    color: isDark ? const Color(0xFFE5E7EB) : Colors.black87,
+                  ),
                 ),
               ),
             const SizedBox(height: 12),

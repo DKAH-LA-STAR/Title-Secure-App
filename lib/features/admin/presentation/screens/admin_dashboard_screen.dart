@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/loading_indicator.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../controllers/admin_controller.dart';
 import '../../data/models/admin_models.dart';
 import '../../../../app/routes/app_routes.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_scaffold.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
@@ -16,6 +16,8 @@ class AdminDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(adminControllerProvider);
     final stats = state.stats;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textSecondary = isDark ? const Color(0xFFE5E7EB) : Colors.black87;
 
     return AppScaffold(
       title: 'Admin Dashboard',
@@ -49,7 +51,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               // Header Card
               Card(
                 elevation: 0,
-                color: Colors.deepPurple.shade900,
+                color: isDark ? AppColors.surfaceVariant : Colors.deepPurple.shade900,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -98,10 +100,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                     children: [
                       Icon(Icons.radar, color: Colors.deepPurple.shade700, size: 32),
                       const SizedBox(width: 14),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Trigger cross-verification scanning across all land title databases.',
-                          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                          style: TextStyle(fontSize: 13, color: textSecondary),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -132,11 +134,14 @@ class AdminDashboardScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.green.shade50,
+                    color: isDark ? Colors.green.shade900.withValues(alpha: 0.3) : Colors.green.shade50,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.green.shade200),
+                    border: Border.all(color: isDark ? Colors.green.shade700 : Colors.green.shade200),
                   ),
-                  child: Text(state.successMessage!, style: TextStyle(color: Colors.green.shade900)),
+                  child: Text(
+                    state.successMessage!,
+                    style: TextStyle(color: isDark ? Colors.green.shade200 : Colors.green.shade900),
+                  ),
                 ),
               ],
 
@@ -145,11 +150,14 @@ class AdminDashboardScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade50,
+                    color: isDark ? Colors.red.shade900.withValues(alpha: 0.3) : Colors.red.shade50,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.red.shade200),
+                    border: Border.all(color: isDark ? Colors.red.shade700 : Colors.red.shade200),
                   ),
-                  child: Text(state.errorMessage!, style: TextStyle(color: Colors.red.shade900)),
+                  child: Text(
+                    state.errorMessage!,
+                    style: TextStyle(color: isDark ? Colors.red.shade200 : Colors.red.shade900),
+                  ),
                 ),
               ],
 
@@ -174,36 +182,42 @@ class AdminDashboardScreen extends ConsumerWidget {
                     '${stats?.totalTitles ?? 0}',
                     Icons.badge,
                     Colors.indigo,
+                    isDark,
                   ),
                   _buildStatCard(
                     'Total Requests',
                     '${stats?.totalRequests ?? 0}',
                     Icons.assignment,
                     Colors.teal,
+                    isDark,
                   ),
                   _buildStatCard(
                     'Pending Audit',
                     '${stats?.pendingVerifications ?? 0}',
                     Icons.pending_actions,
                     Colors.amber.shade800,
+                    isDark,
                   ),
                   _buildStatCard(
                     'Verified Titles',
                     '${stats?.verifiedTitles ?? 0}',
                     Icons.verified,
                     Colors.green,
+                    isDark,
                   ),
                   _buildStatCard(
                     'Exceptions',
                     '${stats?.totalExceptions ?? 0}',
                     Icons.report_problem,
                     Colors.orange.shade800,
+                    isDark,
                   ),
                   _buildStatCard(
                     'Duplicate Flags',
                     '${stats?.duplicateAlerts ?? 0}',
                     Icons.warning_amber,
                     Colors.red,
+                    isDark,
                   ),
                 ],
               ),
@@ -232,13 +246,13 @@ class AdminDashboardScreen extends ConsumerWidget {
               else if (state.duplicates.isEmpty)
                 Card(
                   elevation: 0,
-                  color: Colors.grey.shade100,
+                  color: isDark ? AppColors.surfaceVariant : Colors.grey.shade100,
                   child: Padding(
                     padding: const EdgeInsets.all(30.0),
                     child: Center(
                       child: Text(
                         'No duplicate land claims detected.',
-                        style: TextStyle(color: AppColors.textSecondary),
+                        style: TextStyle(color: textSecondary),
                       ),
                     ),
                   ),
@@ -250,7 +264,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                   itemCount: state.duplicates.length,
                   itemBuilder: (context, index) {
                     final claim = state.duplicates[index];
-                    return _buildDuplicateCard(claim);
+                    return _buildDuplicateCard(claim, isDark);
                   },
                 ),
             ],
@@ -260,7 +274,7 @@ class AdminDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(String title, String value, IconData icon, Color color, bool isDark) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -287,7 +301,11 @@ class AdminDashboardScreen extends ConsumerWidget {
             const SizedBox(height: 6),
             Text(
               title,
-              style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 12,
+                color: isDark ? const Color(0xFFE5E7EB) : Colors.black87,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -295,7 +313,7 @@ class AdminDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDuplicateCard(DuplicateClaimModel claim) {
+  Widget _buildDuplicateCard(DuplicateClaimModel claim, bool isDark) {
     final confidencePct = (claim.confidenceScore * 100).toStringAsFixed(0);
 
     return Card(
@@ -340,10 +358,13 @@ class AdminDashboardScreen extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: isDark ? AppColors.surfaceVariant : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Text('Primary: ${claim.primaryOwner}', style: const TextStyle(fontSize: 12)),
+                    child: Text(
+                      'Primary: ${claim.primaryOwner}',
+                      style: TextStyle(fontSize: 12, color: isDark ? Colors.white : Colors.black87),
+                    ),
                   ),
                 ),
                 const Padding(
@@ -354,10 +375,13 @@ class AdminDashboardScreen extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.red.shade50,
+                      color: isDark ? Colors.red.shade900.withValues(alpha: 0.3) : Colors.red.shade50,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Text('Conflict: ${claim.conflictingOwner}', style: const TextStyle(fontSize: 12)),
+                    child: Text(
+                      'Conflict: ${claim.conflictingOwner}',
+                      style: TextStyle(fontSize: 12, color: isDark ? Colors.red.shade200 : Colors.red.shade900),
+                    ),
                   ),
                 ),
               ],

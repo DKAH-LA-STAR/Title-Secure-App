@@ -150,7 +150,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   child: Text(
                     'Join the Title Secure platform',
                     style: TextStyle(
-                      color: isDark ? AppColors.textMuted : AppColors.textSecondaryLight,
+                      color: isDark ? AppColors.textSecondary : Colors.black87,
                       fontSize: 14,
                     ),
                   ),
@@ -360,9 +360,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'Already have an account?',
-                      style: TextStyle(color: AppColors.textMuted),
+                      style: TextStyle(color: isDark ? AppColors.textSecondary : Colors.black87),
                     ),
                     TextButton(
                       onPressed: () {

@@ -11,6 +11,8 @@ class CustomTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
+  final TextStyle? style;
+  final TextStyle? labelStyle;
 
   const CustomTextField({
     super.key,
@@ -24,17 +26,25 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.validator,
+    this.style,
+    this.labelStyle,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final defaultStyle = TextStyle(color: isDark ? Colors.white : Colors.black);
+    final defaultLabelStyle = TextStyle(color: isDark ? const Color(0xFFE5E7EB) : Colors.black87);
+
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
       validator: validator,
+      style: style ?? defaultStyle,
       decoration: InputDecoration(
         labelText: labelText ?? label,
+        labelStyle: labelStyle ?? defaultLabelStyle,
         hintText: hintText ?? hint,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,

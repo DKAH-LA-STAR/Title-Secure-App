@@ -39,7 +39,9 @@ class StatsCard extends StatelessWidget {
             Text(
               title,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFE5E7EB)
+                    : Colors.black87,
               ),
             ),
           ],

@@ -101,6 +101,9 @@ class _ClientTrackScreenState extends ConsumerState<ClientTrackScreen> {
   }
 
   Widget _buildProgressStepperCard(ClientRequestModel request) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final textSecondary = isDark ? const Color(0xFFE5E7EB) : Colors.black87;
     final steps = [
       {'title': 'Submitted', 'desc': 'Request received (Pending)', 'key': 'pending'},
       {'title': 'Processing', 'desc': 'OCR & Text Extraction', 'key': 'processing'},
@@ -161,18 +164,20 @@ class _ClientTrackScreenState extends ConsumerState<ClientTrackScreen> {
                           radius: 14,
                           backgroundColor: isCompleted
                               ? (isCurrent ? AppColors.primary : Colors.green)
-                              : Colors.grey.shade300,
+                              : (isDark ? AppColors.surfaceVariant : Colors.grey.shade300),
                           child: Icon(
                             isCompleted ? Icons.check : Icons.circle_outlined,
                             size: 16,
-                            color: isCompleted ? Colors.white : Colors.grey.shade600,
+                            color: isCompleted ? Colors.white : (isDark ? Colors.white54 : Colors.black54),
                           ),
                         ),
                         if (!isLast)
                           Container(
                             width: 2,
                             height: 40,
-                            color: index < currentStep ? Colors.green : Colors.grey.shade300,
+                            color: index < currentStep
+                                ? Colors.green
+                                : (isDark ? AppColors.border : Colors.grey.shade300),
                           ),
                       ],
                     ),
@@ -187,13 +192,13 @@ class _ClientTrackScreenState extends ConsumerState<ClientTrackScreen> {
                               steps[index]['title']!,
                               style: TextStyle(
                                 fontWeight: isCompleted ? FontWeight.bold : FontWeight.normal,
-                                color: isCompleted ? AppColors.textPrimary : AppColors.textSecondary,
+                                color: isCompleted ? textColor : (isDark ? Colors.white54 : Colors.black54),
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               steps[index]['desc']!,
-                              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                              style: TextStyle(fontSize: 12, color: textSecondary),
                             ),
                           ],
                         ),
@@ -260,13 +265,14 @@ class _ClientTrackScreenState extends ConsumerState<ClientTrackScreen> {
   }
 
   Widget _row(String label, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: AppColors.textSecondary)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(label, style: TextStyle(color: isDark ? const Color(0xFFE5E7EB) : Colors.black87)),
+          Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
         ],
       ),
     );

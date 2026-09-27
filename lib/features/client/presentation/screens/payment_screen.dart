@@ -107,6 +107,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final textSecondary = isDark ? const Color(0xFFE5E7EB) : Colors.black87;
+
     return AppScaffold(
       title: 'Payment',
       showBackToDashboard: true,
@@ -119,37 +123,39 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             // Amount Banner
             Card(
               elevation: 0,
-              color: AppColors.primary.withValues(alpha: 0.08),
+              color: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.08),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
+                side: BorderSide(color: AppColors.primary.withValues(alpha: isDark ? 0.4 : 0.2)),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       'Total Fee Amount',
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: textColor,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       '${widget.amount.toStringAsFixed(0)} XAF',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: isDark ? const Color(0xFF64B5F6) : AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Tracking Code: ${widget.trackingCode}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: textSecondary,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -158,11 +164,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             ),
 
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Select Mobile Money Provider',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
+                color: textColor,
               ),
             ),
             const SizedBox(height: 12),
@@ -175,6 +182,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     name: 'Orange Money',
                     color: Colors.deepOrange,
                     icon: Icons.phone_android,
+                    isDark: isDark,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -184,6 +192,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     name: 'MTN MoMo',
                     color: Colors.amber.shade800,
                     icon: Icons.account_balance_wallet,
+                    isDark: isDark,
                   ),
                 ),
               ],
@@ -195,7 +204,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               controller: _phoneController,
               label: 'Mobile Money Phone Number',
               hint: 'e.g. 699000000',
-              prefixIcon: const Icon(Icons.phone),
+              labelStyle: TextStyle(color: textSecondary, fontWeight: FontWeight.w500),
+              style: TextStyle(color: textColor),
+              prefixIcon: Icon(Icons.phone, color: isDark ? const Color(0xFF64B5F6) : AppColors.primary),
               keyboardType: TextInputType.phone,
             ),
 
@@ -218,8 +229,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     required String name,
     required Color color,
     required IconData icon,
+    required bool isDark,
   }) {
     final isSelected = _selectedProvider == id;
+    final unselectedBlue = isDark ? const Color(0xFF64B5F6) : AppColors.primary;
 
     return InkWell(
       onTap: () => setState(() => _selectedProvider = id),
@@ -228,22 +241,26 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : Colors.grey.shade50,
+          color: isSelected
+              ? color.withValues(alpha: isDark ? 0.25 : 0.1)
+              : (isDark ? AppColors.surfaceVariant : Colors.white),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? color : Colors.grey.shade300,
-            width: isSelected ? 2 : 1,
+            color: isSelected
+                ? color
+                : (isDark ? AppColors.primary.withValues(alpha: 0.5) : AppColors.primary.withValues(alpha: 0.35)),
+            width: isSelected ? 2 : 1.5,
           ),
         ),
         child: Column(
           children: [
-            Icon(icon, color: color, size: 32),
+            Icon(icon, color: isSelected ? color : unselectedBlue, size: 32),
             const SizedBox(height: 8),
             Text(
               name,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: isSelected ? color : AppColors.textPrimary,
+                color: isSelected ? color : unselectedBlue,
               ),
             ),
           ],
