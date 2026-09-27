@@ -40,6 +40,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     {'value': 'notary', 'label': 'Notary', 'icon': Icons.gavel_rounded},
   ];
 
+  bool _submitted = false;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -51,6 +53,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   void _submit() {
+    FocusScope.of(context).unfocus();
+    setState(() => _submitted = true);
     if (_formKey.currentState!.validate()) {
       ref.read(authControllerProvider.notifier).register(
             name: _nameController.text.trim(),
@@ -89,10 +93,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         }
       } else if (next.status == AuthStatus.error &&
           next.errorMessage != null) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.errorMessage!),
             backgroundColor: AppColors.danger,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -159,9 +165,48 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   padding: const EdgeInsets.all(24),
                   child: Form(
                     key: _formKey,
+                    autovalidateMode: _submitted
+                        ? AutovalidateMode.onUserInteraction
+                        : AutovalidateMode.disabled,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (authState.status == AuthStatus.error &&
+                            authState.errorMessage != null) ...[
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: AppColors.danger.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: AppColors.danger.withValues(alpha: 0.4),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.error_outline_rounded,
+                                  color: AppColors.danger,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    authState.errorMessage!,
+                                    style: const TextStyle(
+                                      color: AppColors.danger,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         // Role selector
                         const Text(
                           'I am a...',

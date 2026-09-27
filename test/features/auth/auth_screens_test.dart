@@ -43,6 +43,21 @@ void main() {
       expect(find.text('Email is required'), findsOneWidget);
       expect(find.text('Password is required'), findsOneWidget);
     });
+
+    testWidgets('displays error banner when auth state has error message', (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
+      await tester.pumpAndSettle();
+
+      final container =
+          ProviderScope.containerOf(tester.element(find.byType(LoginScreen)));
+      container.read(authControllerProvider.notifier).state = const AuthState(
+        status: AuthStatus.error,
+        errorMessage: 'Invalid login credentials',
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Invalid login credentials'), findsWidgets);
+    });
   });
 
   group('RegisterScreen Widget Tests', () {
@@ -98,6 +113,21 @@ void main() {
       expect(find.text('Email is required'), findsNothing);
       expect(find.text('Password is required'), findsNothing);
       expect(find.text('Passwords do not match'), findsNothing);
+    });
+
+    testWidgets('displays error banner when registration fails', (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest(const RegisterScreen()));
+      await tester.pumpAndSettle();
+
+      final container =
+          ProviderScope.containerOf(tester.element(find.byType(RegisterScreen)));
+      container.read(authControllerProvider.notifier).state = const AuthState(
+        status: AuthStatus.error,
+        errorMessage: 'The email has already been taken.',
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('The email has already been taken.'), findsWidgets);
     });
   });
 

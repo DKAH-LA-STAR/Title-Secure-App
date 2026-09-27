@@ -27,6 +27,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
+  bool _submitted = false;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -35,6 +37,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _submit() {
+    FocusScope.of(context).unfocus();
+    setState(() => _submitted = true);
     if (_formKey.currentState!.validate()) {
       ref.read(authControllerProvider.notifier).login(
             _emailController.text.trim(),
@@ -67,10 +71,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
       } else if (next.status == AuthStatus.error &&
           next.errorMessage != null) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.errorMessage!),
             backgroundColor: AppColors.danger,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -152,9 +158,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Form(
                       key: _formKey,
+                      autovalidateMode: _submitted
+                          ? AutovalidateMode.onUserInteraction
+                          : AutovalidateMode.disabled,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          if (authState.status == AuthStatus.error &&
+                              authState.errorMessage != null) ...[
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              margin: const EdgeInsets.only(bottom: 16),
+                              decoration: BoxDecoration(
+                                color: AppColors.danger.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: AppColors.danger.withValues(alpha: 0.4),
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline_rounded,
+                                    color: AppColors.danger,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      authState.errorMessage!,
+                                      style: const TextStyle(
+                                        color: AppColors.danger,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                           TsTextField(
                             controller: _emailController,
                             labelText: 'Email',

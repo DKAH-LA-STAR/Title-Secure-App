@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/network/api_client.dart';
+import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/services/secure_storage.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/models/user_model.dart';
@@ -73,6 +74,28 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
+  String _extractErrorMessage(dynamic e) {
+    if (e is ApiException && e.message.isNotEmpty) {
+      return e.message;
+    }
+    final raw = e.toString();
+    return raw
+        .replaceFirst(RegExp(r'^[A-Za-z0-9_]*Exception:?\s*'), '')
+        .replaceFirst(RegExp(r'^ApiException\([^)]*\):\s*'), '')
+        .trim();
+  }
+
+  void clearError() {
+    if (state.errorMessage != null || state.status == AuthStatus.error) {
+      state = state.copyWith(
+        status: state.user != null
+            ? AuthStatus.authenticated
+            : AuthStatus.unauthenticated,
+        errorMessage: null,
+      );
+    }
+  }
+
   Future<void> login(String email, String password) async {
     state = state.copyWith(status: AuthStatus.loading, errorMessage: null);
     try {
@@ -81,7 +104,7 @@ class AuthController extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
-        errorMessage: e.toString().replaceFirst('Exception: ', ''),
+        errorMessage: _extractErrorMessage(e),
       );
     }
   }
@@ -108,7 +131,7 @@ class AuthController extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
-        errorMessage: e.toString().replaceFirst('Exception: ', ''),
+        errorMessage: _extractErrorMessage(e),
       );
     }
   }

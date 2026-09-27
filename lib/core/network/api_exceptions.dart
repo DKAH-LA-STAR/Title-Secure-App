@@ -5,7 +5,7 @@ class ApiException implements Exception {
   ApiException([this.message = '', this.statusCode]);
 
   @override
-  String toString() => 'ApiException(statusCode: $statusCode, message: $message)';
+  String toString() => message.isNotEmpty ? message : 'ApiException(statusCode: $statusCode)';
 }
 
 class NetworkException extends ApiException {

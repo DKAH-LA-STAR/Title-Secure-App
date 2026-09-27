@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,78 +19,97 @@ import '../../features/notary/presentation/screens/notary_exception_review_scree
 import '../../features/public/presentation/screens/public_verification_screen.dart';
 import 'app_routes.dart';
 
+class RouterNotifier extends ChangeNotifier {
+  final Ref _ref;
+
+  RouterNotifier(this._ref) {
+    _ref.listen<AuthState>(
+      authControllerProvider,
+      (_, __) => notifyListeners(),
+    );
+  }
+
+  String? redirect(BuildContext context, GoRouterState state) {
+    final authState = _ref.read(authControllerProvider);
+    final isLoggedIn = authState.status == AuthStatus.authenticated;
+    final matched = state.matchedLocation;
+
+    // Unauthenticated public routes
+    final isPublicRoute = matched == AppRoutes.initial ||
+        matched == AppRoutes.welcome ||
+        matched == AppRoutes.login ||
+        matched == AppRoutes.register ||
+        matched == AppRoutes.forgotPassword ||
+        matched == AppRoutes.verify;
+
+    // Checking local storage token or auth state loading - preserve current view
+    if (authState.status == AuthStatus.initial ||
+        authState.status == AuthStatus.loading) {
+      return null;
+    }
+
+    // Restrict unauthenticated users to public routes
+    if (!isLoggedIn) {
+      if (isPublicRoute) return null;
+      return AppRoutes.initial;
+    }
+
+    // Role-based dashboard determination
+    final role = authState.user?.role?.toLowerCase() ?? 'client';
+    String roleHome;
+    switch (role) {
+      case 'agent':
+        roleHome = AppRoutes.agentDashboard;
+        break;
+      case 'notary':
+        roleHome = AppRoutes.notaryDashboard;
+        break;
+      case 'admin':
+        roleHome = AppRoutes.adminDashboard;
+        break;
+      case 'client':
+      default:
+        roleHome = AppRoutes.clientDashboard;
+        break;
+    }
+
+    // Authenticated user trying to view login, register, or welcome screen
+    if (matched == AppRoutes.login ||
+        matched == AppRoutes.register ||
+        matched == AppRoutes.initial ||
+        matched == AppRoutes.welcome) {
+      return roleHome;
+    }
+
+    // Restrict role access to appropriate subroutes
+    if (matched.startsWith('/client') && role != 'client' && role != 'admin') {
+      return roleHome;
+    }
+    if (matched.startsWith('/agent') && role != 'agent' && role != 'admin') {
+      return roleHome;
+    }
+    if (matched.startsWith('/notary') && role != 'notary' && role != 'admin') {
+      return roleHome;
+    }
+    if (matched.startsWith('/admin') && role != 'admin') {
+      return roleHome;
+    }
+
+    return null;
+  }
+}
+
+final routerNotifierProvider = Provider<RouterNotifier>((ref) {
+  return RouterNotifier(ref);
+});
+
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authControllerProvider);
+  final notifier = ref.watch(routerNotifierProvider);
 
   return GoRouter(
     initialLocation: AppRoutes.initial,
-    redirect: (context, state) {
-      final isLoggedIn = authState.status == AuthStatus.authenticated;
-      final matched = state.matchedLocation;
-
-      // Unauthenticated public routes
-      final isPublicRoute = matched == AppRoutes.initial ||
-          matched == AppRoutes.welcome ||
-          matched == AppRoutes.login ||
-          matched == AppRoutes.register ||
-          matched == AppRoutes.forgotPassword ||
-          matched == AppRoutes.verify;
-
-      // Checking local storage token or auth state loading
-      if (authState.status == AuthStatus.initial ||
-          authState.status == AuthStatus.loading) {
-        return null;
-      }
-
-      // Restrict unauthenticated users to public routes
-      if (!isLoggedIn) {
-        if (isPublicRoute) return null;
-        return AppRoutes.initial;
-      }
-
-      // Role-based dashboard determination
-      final role = authState.user?.role?.toLowerCase() ?? 'client';
-      String roleHome;
-      switch (role) {
-        case 'agent':
-          roleHome = AppRoutes.agentDashboard;
-          break;
-        case 'notary':
-          roleHome = AppRoutes.notaryDashboard;
-          break;
-        case 'admin':
-          roleHome = AppRoutes.adminDashboard;
-          break;
-        case 'client':
-        default:
-          roleHome = AppRoutes.clientDashboard;
-          break;
-      }
-
-      // Authenticated user trying to view login, register, or welcome screen
-      if (matched == AppRoutes.login ||
-          matched == AppRoutes.register ||
-          matched == AppRoutes.initial ||
-          matched == AppRoutes.welcome) {
-        return roleHome;
-      }
-
-      // Restrict role access to appropriate subroutes
-      if (matched.startsWith('/client') && role != 'client' && role != 'admin') {
-        return roleHome;
-      }
-      if (matched.startsWith('/agent') && role != 'agent' && role != 'admin') {
-        return roleHome;
-      }
-      if (matched.startsWith('/notary') && role != 'notary' && role != 'admin') {
-        return roleHome;
-      }
-      if (matched.startsWith('/admin') && role != 'admin') {
-        return roleHome;
-      }
-
-      return null;
-    },
+    refreshListenable: notifier,
+    redirect: notifier.redirect,
     routes: [
       GoRoute(
         path: AppRoutes.initial,

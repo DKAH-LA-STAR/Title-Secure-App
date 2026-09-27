@@ -89,8 +89,10 @@ class ApiClient {
   }
 }
 
-/// Automatically retries connection failures between 127.0.0.1 (physical device with adb reverse)
-/// and 10.0.2.2 (Android emulator without adb reverse).
+/// Automatically retries connection failures across available network hosts:
+/// 127.0.0.1 (physical device with adb reverse, or local tests)
+/// 192.168.1.75 (physical device over local Wi-Fi without adb reverse)
+/// 10.0.2.2 (Android emulator)
 class _FallbackHostInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
@@ -99,34 +101,39 @@ class _FallbackHostInterceptor extends Interceptor {
         err.type == DioExceptionType.connectionTimeout ||
             err.type == DioExceptionType.connectionError;
 
-    if (isConnectionFailure &&
-        !err.requestOptions.extra.containsKey('retried_fallback')) {
-      String? alternateHost;
-      if (uri.host == '10.0.2.2') {
-        alternateHost = '127.0.0.1';
-      } else if (uri.host == '127.0.0.1' || uri.host == 'localhost') {
-        alternateHost = '10.0.2.2';
-      }
+    if (isConnectionFailure) {
+      final List<String> triedHosts = List<String>.from(
+        err.requestOptions.extra['tried_hosts'] as List? ?? [uri.host],
+      );
 
-      if (alternateHost != null) {
-        final newUri = uri.replace(host: alternateHost);
+      final candidateHosts = ['127.0.0.1', '192.168.1.75', '10.0.2.2'];
+      final nextHost = candidateHosts.firstWhere(
+        (h) => !triedHosts.contains(h),
+        orElse: () => '',
+      );
+
+      if (nextHost.isNotEmpty) {
+        final newUri = uri.replace(host: nextHost);
         final newOptions = err.requestOptions.copyWith(
           path: newUri.toString(),
-          extra: {...err.requestOptions.extra, 'retried_fallback': true},
+          extra: {
+            ...err.requestOptions.extra,
+            'tried_hosts': [...triedHosts, nextHost],
+          },
         );
 
         try {
           final client = Dio(BaseOptions(
-            connectTimeout: const Duration(seconds: 4),
-            receiveTimeout: const Duration(seconds: 10),
+            connectTimeout: const Duration(seconds: 3),
+            receiveTimeout: const Duration(seconds: 8),
             headers: err.requestOptions.headers,
           ));
           final response = await client.fetch(newOptions);
           // Remember the successful base URL for subsequent calls
-          ApiEndpoints.setBaseUrl('http://$alternateHost:${uri.port}/api');
+          ApiEndpoints.setBaseUrl('http://$nextHost:${uri.port}/api');
           return handler.resolve(response);
         } catch (_) {
-          // If fallback also fails, proceed with original error
+          // If fallback also fails, continue onError handler chain
         }
       }
     }
